@@ -1,7 +1,8 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.evplatform.ev-platform-api' is invalid and this project uses 'com.evplatform.ev_platform_api' instead.
+* The original package name 'com.evplatform.ev-platform-api' is invalid and this project uses 'com.evplatform.api'
+  instead.
 
 # Getting Started
 

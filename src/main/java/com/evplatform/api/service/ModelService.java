@@ -1,5 +1,6 @@
 package com.evplatform.api.service;
 
+import com.evplatform.api.model.dto.ModelDto;
 import com.evplatform.api.model.entity.Brand;
 import com.evplatform.api.model.entity.Model;
 import com.evplatform.api.repository.BrandRepository;
@@ -20,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ModelService {
   private final BrandRepository brandRepository;
-
   private final ModelRepository modelRepository;
   private final BrandService brandService;
 
@@ -36,8 +36,9 @@ public class ModelService {
 
   public Model findById(Integer id) {
     log.debug("Finding model by id: {}", id);
-    return modelRepository.findById(id)
+    var model = modelRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Model not found with id: " + id));
+    return model;
   }
 
   public List<Model> findByBrandId(Integer brandId) {
@@ -76,7 +77,8 @@ public class ModelService {
   public Model update(Integer id, Model modelDetails) {
     log.debug("Updating model with id: {}", id);
 
-    Model existingModel = findById(id);
+    Model existingModel = modelRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Model not found with id: " + id));
 
     // Check if name is being changed and if new name already exists for the brand
     if (!existingModel.getName().equals(modelDetails.getName()) &&
@@ -102,7 +104,8 @@ public class ModelService {
   public void deleteById(Integer id) {
     log.debug("Deleting model with id: {}", id);
 
-    Model model = findById(id);
+    Model model = modelRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Model not found with id: " + id));
 
     if (!model.getGenerations().isEmpty()) {
       throw new IllegalStateException("Cannot delete model with existing generations");
@@ -117,5 +120,20 @@ public class ModelService {
 
   public boolean existsByNameAndBrandId(String name, Integer brandId) {
     return modelRepository.existsByNameAndBrandId(name, brandId);
+  }
+
+
+  public ModelDto toModelDto(Model model) {
+    return ModelDto.builder()
+        .name(model.getName())
+        .brand(brandService.toBrandDto(model.getBrand()))
+        .build();
+  }
+
+  public Model toModel(ModelDto modelDto) {
+    return Model.builder()
+        .id(modelDto.getId())
+        .name(modelDto.getName())
+        .build();
   }
 }

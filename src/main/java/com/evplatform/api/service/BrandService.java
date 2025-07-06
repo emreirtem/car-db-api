@@ -22,11 +22,9 @@ public class BrandService {
 
   private final BrandRepository brandRepository;
 
-  public List<BrandDto> findAll() {
+  public List<Brand> findAll() {
     log.debug("Finding all brands");
-    return brandRepository.findAll().stream()
-        .map(this::toBrandDto)
-        .toList();
+    return brandRepository.findAll();
   }
 
   public Page<Brand> findAll(Pageable pageable) {
@@ -34,23 +32,10 @@ public class BrandService {
     return brandRepository.findAll(pageable);
   }
 
-  public BrandDto findById(Integer id) {
+  public Brand findById(Integer id) {
     log.debug("Finding brand by id: {}", id);
-    var brand = brandRepository.findById(id)
+    return brandRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Brand not found with id: " + id));
-
-    return BrandDto.builder()
-        .id(brand.getId())
-        .name(brand.getName())
-        .models(
-            brand.getModels().stream()
-                .map(model -> ModelDto.builder()
-                    .id(model.getId())
-                    .name(model.getName())
-                    .build())
-                .toList())
-        .build();
-
   }
 
   public Optional<Brand> findByName(String name) {
@@ -58,26 +43,24 @@ public class BrandService {
     return brandRepository.findByName(name);
   }
 
-  public List<BrandDto> findByNameContaining(String name) {
+  public List<Brand> findByNameContaining(String name) {
     log.debug("Finding brands containing name: {}", name);
-    return brandRepository.findByNameContainingIgnoreCase(name).stream()
-        .map(this::toBrandDto)
-        .toList();
+    return brandRepository.findByNameContainingIgnoreCase(name);
   }
 
   @Transactional
-  public BrandDto save(Brand brand) {
+  public Brand save(Brand brand) {
     log.debug("Saving brand: {}", brand.getName());
 
     if (brandRepository.existsByNameIgnoreCase(brand.getName())) {
       throw new IllegalArgumentException("Brand with name '" + brand.getName() + "' already exists");
     }
 
-    return toBrandDto(brandRepository.save(brand));
+    return brandRepository.save(brand);
   }
 
   @Transactional
-  public BrandDto update(Integer id, Brand brandDetails) {
+  public Brand update(Integer id, Brand brandDetails) {
     log.debug("Updating brand with id: {}", id);
 
     Brand existingBrand = brandRepository.findById(id)
@@ -90,7 +73,7 @@ public class BrandService {
     }
 
     existingBrand.setName(brandDetails.getName());
-    return toBrandDto(brandRepository.save(existingBrand));
+    return brandRepository.save(existingBrand);
   }
 
   @Transactional
@@ -111,10 +94,24 @@ public class BrandService {
     return brandRepository.existsByNameIgnoreCase(name);
   }
 
-  private BrandDto toBrandDto(Brand brand) {
+  public BrandDto toBrandDto(Brand brand) {
     return BrandDto.builder()
         .id(brand.getId())
         .name(brand.getName())
+        .build();
+  }
+
+  public BrandDto toBrandDtoWithModels(Brand brand) {
+    return BrandDto.builder()
+        .id(brand.getId())
+        .name(brand.getName())
+        .models(
+            brand.getModels().stream()
+                .map(model -> ModelDto.builder()
+                    .id(model.getId())
+                    .name(model.getName())
+                    .build())
+                .toList())
         .build();
   }
 }

@@ -63,8 +63,7 @@ public class TrimLevelService {
     log.debug("Saving trim level: {} for model: {}", trimLevel.getName(), trimLevel.getModel().getName());
 
     // Validate model exists
-    Model model = modelService.findById(trimLevel.getModel().getId());
-    trimLevel.setModel(model);
+    trimLevel.setModel(modelService.findById(trimLevel.getModel().getId()));
 
     return trimLevelRepository.save(trimLevel);
   }

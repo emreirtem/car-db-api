@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping("/brands")
+@RequestMapping("/brand")
 @RequiredArgsConstructor
 public class BrandController {
 
@@ -26,12 +26,20 @@ public class BrandController {
 
   @GetMapping
   public ResponseEntity<List<BrandDto>> getBrands() {
-    return ResponseEntity.ok(brandService.findAll());
+    return ResponseEntity.ok(
+        brandService.findAll().stream()
+            .map(brandService::toBrandDto)
+            .toList()
+    );
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<BrandDto> getBrand(@PathVariable Integer id) {
-    return ResponseEntity.ok(brandService.findById(id));
+    return ResponseEntity.ok(
+        brandService.toBrandDtoWithModels(
+            brandService.findById(id)
+        )
+    );
   }
 
   @PostMapping
@@ -44,14 +52,17 @@ public class BrandController {
         .buildAndExpand(savedBrand.getId())
         .toUri();
 
-    return ResponseEntity
-        .created(location)
-        .body(savedBrand);
+    return ResponseEntity.created(location)
+        .body(brandService.toBrandDto(savedBrand));
   }
 
   @PutMapping
   public ResponseEntity<BrandDto> updateBrand(@RequestBody Brand brandRequest) {
-    return ResponseEntity.ok(brandService.update(brandRequest.getId(), brandRequest));
+    return ResponseEntity.ok(
+        brandService.toBrandDto(
+            brandService.update(brandRequest.getId(), brandRequest)
+        )
+    );
   }
 
   @DeleteMapping("/{id}")

@@ -1,5 +1,6 @@
 package com.evplatform.api.model.entity;
 
+import com.evplatform.api.model.dto.BrandDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,6 +37,13 @@ public class Brand {
   @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @Builder.Default
   private List<Model> models = new ArrayList<>();
+
+  public static Brand of(BrandDto brandDto) {
+    return Brand.builder()
+        .id(brandDto.getId())
+        .name(brandDto.getName())
+        .build();
+  }
 
   public void addModel(Model model) {
     models.add(model);

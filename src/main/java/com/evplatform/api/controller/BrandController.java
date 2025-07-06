@@ -28,7 +28,7 @@ public class BrandController {
   public ResponseEntity<List<BrandDto>> getBrands() {
     return ResponseEntity.ok(
         brandService.findAll().stream()
-            .map(brandService::toBrandDto)
+            .map(BrandDto::of)
             .toList()
     );
   }
@@ -36,7 +36,7 @@ public class BrandController {
   @GetMapping("/{id}")
   public ResponseEntity<BrandDto> getBrand(@PathVariable Integer id) {
     return ResponseEntity.ok(
-        brandService.toBrandDtoWithModels(
+        BrandDto.ofWithModels(
             brandService.findById(id)
         )
     );
@@ -47,20 +47,21 @@ public class BrandController {
 
     var savedBrand = brandService.save(brandRequest);
 
+    // TODO : diğer apilar da bu şekilde resource dönsün
     URI location = ServletUriComponentsBuilder.fromCurrentRequest()
         .path("/{id}")
         .buildAndExpand(savedBrand.getId())
         .toUri();
 
     return ResponseEntity.created(location)
-        .body(brandService.toBrandDto(savedBrand));
+        .body(BrandDto.of(savedBrand));
   }
 
   @PutMapping
-  public ResponseEntity<BrandDto> updateBrand(@RequestBody Brand brandRequest) {
+  public ResponseEntity<BrandDto> updateBrand(@RequestBody BrandDto brandRequest) {
     return ResponseEntity.ok(
-        brandService.toBrandDto(
-            brandService.update(brandRequest.getId(), brandRequest)
+        BrandDto.of(
+            brandService.update(brandRequest.getId(), Brand.of(brandRequest))
         )
     );
   }

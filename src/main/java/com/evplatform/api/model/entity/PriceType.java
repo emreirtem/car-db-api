@@ -1,5 +1,6 @@
 package com.evplatform.api.model.entity;
 
+import com.evplatform.api.model.dto.PriceTypeDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,5 +52,11 @@ public class PriceType {
   public void removePrice(Price price) {
     prices.remove(price);
     price.setPriceType(null);
+  }
+
+  public static PriceType of(PriceTypeDto priceTypeDto) {
+    return PriceType.builder()
+        .type(priceTypeDto.getType())
+        .build();
   }
 }

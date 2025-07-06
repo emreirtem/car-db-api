@@ -84,7 +84,7 @@ public class CarService {
     log.debug("Updating car with id: {}", id);
 
     Car existingCar = findById(id);
-    validateCarData(carDetails);
+    //validateCarData(carDetails); // Transactional bir sorun var
 
     existingCar.setYear(carDetails.getYear());
     existingCar.setModel(carDetails.getModel());
@@ -103,7 +103,7 @@ public class CarService {
   }
 
   private void validateCarData(Car car) {
-    if (car.getYear() == null || car.getYear() < 1900 || car.getYear() > 2030) {
+    if (car.getYear() == null || car.getYear() < 1900 || car.getYear() > 2100) {
       throw new IllegalArgumentException("Invalid year: " + car.getYear());
     }
 

@@ -1,7 +1,5 @@
 package com.evplatform.api.service;
 
-import com.evplatform.api.model.dto.BrandDto;
-import com.evplatform.api.model.dto.ModelDto;
 import com.evplatform.api.model.entity.Brand;
 import com.evplatform.api.repository.BrandRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -94,24 +92,4 @@ public class BrandService {
     return brandRepository.existsByNameIgnoreCase(name);
   }
 
-  public BrandDto toBrandDto(Brand brand) {
-    return BrandDto.builder()
-        .id(brand.getId())
-        .name(brand.getName())
-        .build();
-  }
-
-  public BrandDto toBrandDtoWithModels(Brand brand) {
-    return BrandDto.builder()
-        .id(brand.getId())
-        .name(brand.getName())
-        .models(
-            brand.getModels().stream()
-                .map(model -> ModelDto.builder()
-                    .id(model.getId())
-                    .name(model.getName())
-                    .build())
-                .toList())
-        .build();
-  }
 }

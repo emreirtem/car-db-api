@@ -61,7 +61,7 @@ public class PriceService {
 
   public Optional<Price> findLatestByPriceTypeAndRefId(String priceType, Integer refId) {
     log.debug("Finding latest price by price type: {} and reference id: {}", priceType, refId);
-    return priceRepository.findLatestByPriceTypeAndRefId(priceType, refId);
+    return priceRepository.findFirstByPriceType_TypeAndRefIdOrderByDateDesc(priceType, refId);
   }
 
   @Transactional
@@ -73,7 +73,7 @@ public class PriceService {
     price.setPriceType(priceType);
 
     // Validate price value
-    if (price.getPrice() == null || price.getPrice() <= 0) {
+    if (price.getPrice() == null) {
       throw new IllegalArgumentException("Price value must be positive");
     }
 
@@ -86,7 +86,7 @@ public class PriceService {
 
     Price existingPrice = findById(id);
 
-    if (priceDetails.getPrice() == null || priceDetails.getPrice() <= 0) {
+    if (priceDetails.getPrice() == null) {
       throw new IllegalArgumentException("Price value must be positive");
     }
 

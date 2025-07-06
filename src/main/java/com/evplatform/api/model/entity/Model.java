@@ -1,5 +1,6 @@
 package com.evplatform.api.model.entity;
 
+import com.evplatform.api.model.dto.ModelDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,6 +53,19 @@ public class Model {
     this.brand = brand;
   }
 
+  public static Model of(ModelDto modelDto) {
+    return Model.builder()
+        .id(modelDto.getId())
+        .name(modelDto.getName())
+        .build();
+  }
+
+  public static Model ofWithBrand(ModelDto modelDto) {
+    var model = of(modelDto);
+    model.setBrand(Brand.of(modelDto.getBrand()));
+    return model;
+  }
+
   public void addGeneration(Generation generation) {
     generations.add(generation);
     generation.setModel(this);
@@ -71,4 +85,6 @@ public class Model {
     trimLevels.remove(trimLevel);
     trimLevel.setModel(null);
   }
+
+
 }

@@ -1,5 +1,6 @@
 package com.evplatform.api.model.entity;
 
+import com.evplatform.api.model.dto.TrimLevelDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,6 +66,27 @@ public class TrimLevel {
   public TrimLevel(String name, Model model) {
     this.name = name;
     this.model = model;
+  }
+
+  public static TrimLevel of(TrimLevelDto trimLevelDto) {
+    return TrimLevel.builder()
+        .id(trimLevelDto.getId())
+        .name(trimLevelDto.getName())
+        .version(trimLevelDto.getVersion())
+        .isOption(trimLevelDto.getIsOption())
+        .build();
+  }
+
+  public static TrimLevel ofWithModel(TrimLevelDto trimLevelDto) {
+    var trimLevel = of(trimLevelDto);
+    trimLevel.setModel(Model.of(trimLevelDto.getModel()));
+    return trimLevel;
+  }
+
+  public static TrimLevel ofWithModelAndBrand(TrimLevelDto trimLevelDto) {
+    var trimLevel = of(trimLevelDto);
+    trimLevel.setModel(Model.ofWithBrand(trimLevelDto.getModel()));
+    return trimLevel;
   }
 
   public void addCar(Car car) {

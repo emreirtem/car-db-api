@@ -21,6 +21,6 @@ public interface PriceRepository extends JpaRepository<Price, Integer> {
   @Query("SELECT p FROM Price p WHERE p.date BETWEEN :startDate AND :endDate")
   List<Price> findByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
-  @Query("SELECT p FROM Price p WHERE p.priceType.type = :priceType AND p.refId = :refId ORDER BY p.date DESC")
-  Optional<Price> findLatestByPriceTypeAndRefId(@Param("priceType") String priceType, @Param("refId") Integer refId);
+  Optional<Price> findFirstByPriceType_TypeAndRefIdOrderByDateDesc(String priceType, Integer refId);
+
 }

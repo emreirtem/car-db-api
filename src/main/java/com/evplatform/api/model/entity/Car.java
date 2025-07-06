@@ -1,5 +1,6 @@
 package com.evplatform.api.model.entity;
 
+import com.evplatform.api.model.dto.CarDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -49,4 +50,15 @@ public class Car {
     this.generation = generation;
     this.trimLevel = trimLevel;
   }
+
+  public static Car of(CarDto carDto) {
+    return Car.builder()
+        .id(carDto.getId())
+        .year(carDto.getYear())
+        .model(Model.of(carDto.getModel()))
+        .generation(Generation.of(carDto.getGeneration()))
+        .trimLevel(TrimLevel.of(carDto.getTrimLevel()))
+        .build();
+  }
+
 }

@@ -1,5 +1,6 @@
 package com.evplatform.api.model.entity;
 
+import com.evplatform.api.model.dto.GenerationDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,6 +54,27 @@ public class Generation {
   public Generation(String name, Model model) {
     this.name = name;
     this.model = model;
+  }
+
+  public static Generation of(GenerationDto generationDto) {
+    return Generation.builder()
+        .id(generationDto.getId())
+        .name(generationDto.getName())
+        .faceliftVersion(generationDto.getFaceliftVersion())
+        .faceliftDate(generationDto.getFaceliftDate())
+        .build();
+  }
+
+  public static Generation ofWithModel(GenerationDto generationDto) {
+    var generation = of(generationDto);
+    generation.setModel(Model.of(generationDto.getModel()));
+    return generation;
+  }
+
+  public static Generation ofWithModelAndBrand(GenerationDto generationDto) {
+    var generation = of(generationDto);
+    generation.setModel(Model.ofWithBrand(generationDto.getModel()));
+    return generation;
   }
 
   public void addCar(Car car) {

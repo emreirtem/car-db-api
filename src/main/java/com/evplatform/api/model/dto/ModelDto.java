@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Builder
 @Data
-public class BrandDto {
-  private Integer id;
-
+public class ModelDto {
+  private Long id;
+  private BrandDto brand;
   private String name;
 
 }

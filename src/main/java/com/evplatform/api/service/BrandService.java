@@ -3,58 +3,100 @@ package com.evplatform.api.service;
 import com.evplatform.api.model.dto.BrandDto;
 import com.evplatform.api.model.entity.Brand;
 import com.evplatform.api.repository.BrandRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
+@Transactional(readOnly = true)
 public class BrandService {
 
   private final BrandRepository brandRepository;
 
-  public List<BrandDto> getAllBrands() {
+  public List<BrandDto> findAll() {
+    log.debug("Finding all brands");
     return brandRepository.findAll().stream()
-        .map(BrandService::mapToBrandDto)
+        .map(this::toBrandDto)
         .toList();
   }
 
-  public BrandDto createBrand(BrandDto brandRequest) {
-    if (brandRepository.existsByNameIgnoreCase(brandRequest.getName())) {
-      throw new IllegalArgumentException("Brand with name '" + brandRequest.getName() + "' already exists.");
+  public Page<Brand> findAll(Pageable pageable) {
+    log.debug("Finding all brands with pagination: {}", pageable);
+    return brandRepository.findAll(pageable);
+  }
+
+  public Brand findById(Integer id) {
+    log.debug("Finding brand by id: {}", id);
+    return brandRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Brand not found with id: " + id));
+  }
+
+  public Optional<Brand> findByName(String name) {
+    log.debug("Finding brand by name: {}", name);
+    return brandRepository.findByName(name);
+  }
+
+  public List<Brand> findByNameContaining(String name) {
+    log.debug("Finding brands containing name: {}", name);
+    return brandRepository.findByNameContainingIgnoreCase(name);
+  }
+
+  @Transactional
+  public BrandDto save(Brand brand) {
+    log.debug("Saving brand: {}", brand.getName());
+
+    if (brandRepository.existsByNameIgnoreCase(brand.getName())) {
+      throw new IllegalArgumentException("Brand with name '" + brand.getName() + "' already exists");
     }
-    var brandEntity = mapToBrandEntity(brandRequest);
-    var entity = brandRepository.save(brandEntity);
-    return mapToBrandDto(entity);
+
+    return toBrandDto(brandRepository.save(brand));
   }
 
-  public BrandDto updateBrand(BrandDto brandRequest) {
-    Brand existingBrand = brandRepository.findById(brandRequest.getId())
-        .orElseThrow(() -> new NoSuchElementException("Brand not found with id: " + brandRequest.getId()));
+  @Transactional
+  public BrandDto update(Integer id, Brand brandDetails) {
+    log.debug("Updating brand with id: {}", id);
 
-    if (brandRepository.existsByNameIgnoreCase(brandRequest.getName())) {
-      throw new IllegalArgumentException("Brand with name '" + brandRequest.getName() + "' already exists.");
+    Brand existingBrand = findById(id);
+
+    // Check if name is being changed and if new name already exists
+    if (!existingBrand.getName().equals(brandDetails.getName()) &&
+        brandRepository.existsByNameIgnoreCase(brandDetails.getName())) {
+      throw new IllegalArgumentException("Brand with name '" + brandDetails.getName() + "' already exists");
     }
 
-    existingBrand.setName(brandRequest.getName());
-
-    return mapToBrandDto(brandRepository.save(existingBrand));
+    existingBrand.setName(brandDetails.getName());
+    return toBrandDto(brandRepository.save(existingBrand));
   }
 
-  private static Brand mapToBrandEntity(BrandDto brandRequest) {
-    return Brand.builder()
-        .id(brandRequest.getId())
-        .name(brandRequest.getName())
-        .build();
+  @Transactional
+  public void deleteById(Integer id) {
+    log.debug("Deleting brand with id: {}", id);
+
+    Brand brand = findById(id);
+
+    if (!brand.getModels().isEmpty()) {
+      throw new IllegalStateException("Cannot delete brand with existing models");
+    }
+
+    brandRepository.deleteById(id);
   }
 
-  private static BrandDto mapToBrandDto(Brand entity) {
+  public boolean existsByName(String name) {
+    return brandRepository.existsByNameIgnoreCase(name);
+  }
+
+  private BrandDto toBrandDto(Brand brand) {
     return BrandDto.builder()
-        .id(entity.getId())
-        .name(entity.getName())
+        .id(brand.getId())
+        .name(brand.getName())
         .build();
   }
-
-
 }

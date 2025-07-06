@@ -17,33 +17,41 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// FeatureCategory Entity
 @Entity
-@Table(name = "brand")
+@Table(name = "feature_category")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Brand {
+public class FeatureCategory {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column(name = "name", nullable = false, length = 50)
+  @Column(name = "name", nullable = false)
   private String name;
 
-  @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  // One-to-Many relationship with Features
+  @OneToMany(mappedBy = "featureCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @Builder.Default
-  private List<Model> models = new ArrayList<>();
+  private List<Feature> features = new ArrayList<>();
 
-  public void addModel(Model model) {
-    models.add(model);
-    model.setBrand(this);
+  // Constructor for convenience
+  public FeatureCategory(String name) {
+    this.name = name;
   }
 
-  public void removeModel(Model model) {
-    models.remove(model);
-    model.setBrand(null);
+  // Helper methods
+  public void addFeature(Feature feature) {
+    features.add(feature);
+    feature.setFeatureCategory(this);
+  }
+
+  public void removeFeature(Feature feature) {
+    features.remove(feature);
+    feature.setFeatureCategory(null);
   }
 }

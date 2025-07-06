@@ -2,6 +2,7 @@ package com.evplatform.api.service;
 
 import com.evplatform.api.model.entity.Brand;
 import com.evplatform.api.model.entity.Model;
+import com.evplatform.api.repository.BrandRepository;
 import com.evplatform.api.repository.ModelRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Transactional(readOnly = true)
 public class ModelService {
+  private final BrandRepository brandRepository;
 
   private final ModelRepository modelRepository;
   private final BrandService brandService;
@@ -63,7 +65,8 @@ public class ModelService {
     }
 
     // Validate brand exists
-    Brand brand = brandService.findById(model.getBrand().getId());
+    Brand brand = brandRepository.findById(model.getBrand().getId())
+        .orElseThrow(() -> new EntityNotFoundException("Brand not found with id: " + model.getBrand().getId()));
     model.setBrand(brand);
 
     return modelRepository.save(model);
@@ -87,7 +90,8 @@ public class ModelService {
     // If brand is being changed, validate it
     if (modelDetails.getBrand() != null &&
         !existingModel.getBrand().getId().equals(modelDetails.getBrand().getId())) {
-      Brand newBrand = brandService.findById(modelDetails.getBrand().getId());
+      Brand newBrand = brandRepository.findById(modelDetails.getBrand().getId())
+          .orElseThrow(() -> new EntityNotFoundException("Brand not found with id: " + modelDetails.getBrand().getId()));
       existingModel.setBrand(newBrand);
     }
 

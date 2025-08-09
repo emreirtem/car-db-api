@@ -11,12 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class ModelService {
 
   private final ModelRepository modelRepository;
@@ -54,7 +52,6 @@ public class ModelService {
     return modelRepository.findByNameContainingIgnoreCase(name);
   }
 
-  @Transactional
   public Model save(Model model) {
     log.debug("Saving model: {} for brand: {}", model.getName(), model.getBrand().getName());
 
@@ -70,7 +67,6 @@ public class ModelService {
     return modelRepository.save(model);
   }
 
-  @Transactional
   public Model update(Integer id, Model modelDetails) {
     log.debug("Updating model with id: {}", id);
 
@@ -96,7 +92,6 @@ public class ModelService {
     return modelRepository.save(existingModel);
   }
 
-  @Transactional
   public void deleteById(Integer id) {
     log.debug("Deleting model with id: {}", id);
 

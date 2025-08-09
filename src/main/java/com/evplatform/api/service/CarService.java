@@ -12,12 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class CarService {
 
   private final CarRepository carRepository;
@@ -71,7 +69,6 @@ public class CarService {
     return carRepository.findByTrimLevelId(trimLevelId);
   }
 
-  @Transactional
   public Car save(Car car) {
     log.debug("Saving car: year={}, model={}", car.getYear(), car.getModel().getName());
 
@@ -79,7 +76,6 @@ public class CarService {
     return carRepository.save(car);
   }
 
-  @Transactional
   public Car update(Integer id, Car carDetails) {
     log.debug("Updating car with id: {}", id);
 
@@ -94,7 +90,6 @@ public class CarService {
     return carRepository.save(existingCar);
   }
 
-  @Transactional
   public void deleteById(Integer id) {
     log.debug("Deleting car with id: {}", id);
 

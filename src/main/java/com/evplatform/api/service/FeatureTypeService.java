@@ -9,12 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class FeatureTypeService {
 
   private final FeatureTypeRepository featureTypeRepository;
@@ -35,7 +33,6 @@ public class FeatureTypeService {
         .orElseThrow(() -> new EntityNotFoundException("Feature type not found with name: " + name));
   }
 
-  @Transactional
   public FeatureType save(FeatureType featureType) {
     log.debug("Saving feature type: {}", featureType.getName());
 
@@ -46,7 +43,6 @@ public class FeatureTypeService {
     return featureTypeRepository.save(featureType);
   }
 
-  @Transactional
   public FeatureType update(String name, FeatureType typeDetails) {
     log.debug("Updating feature type with name: {}", name);
 
@@ -57,7 +53,6 @@ public class FeatureTypeService {
     return featureTypeRepository.save(existingType);
   }
 
-  @Transactional
   public void deleteById(String name) {
     log.debug("Deleting feature type with name: {}", name);
 

@@ -12,12 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class PriceService {
 
   private final PriceRepository priceRepository;
@@ -64,7 +62,6 @@ public class PriceService {
     return priceRepository.findFirstByPriceType_TypeAndRefIdOrderByDateDesc(priceType, refId);
   }
 
-  @Transactional
   public Price save(Price price) {
     log.debug("Saving price: {} for type: {}", price.getPrice(), price.getPriceType().getType());
 
@@ -80,7 +77,6 @@ public class PriceService {
     return priceRepository.save(price);
   }
 
-  @Transactional
   public Price update(Integer id, Price priceDetails) {
     log.debug("Updating price with id: {}", id);
 
@@ -104,7 +100,6 @@ public class PriceService {
     return priceRepository.save(existingPrice);
   }
 
-  @Transactional
   public void deleteById(Integer id) {
     log.debug("Deleting price with id: {}", id);
 

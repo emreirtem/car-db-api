@@ -11,12 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class GenerationService {
 
   private final GenerationRepository generationRepository;
@@ -53,7 +51,6 @@ public class GenerationService {
     return generationRepository.findByNameAndModelId(name, modelId);
   }
 
-  @Transactional
   public Generation save(Generation generation) {
     log.debug("Saving generation: {} for model: {}", generation.getName(), generation.getModel().getName());
 
@@ -64,7 +61,6 @@ public class GenerationService {
     return generationRepository.save(generation);
   }
 
-  @Transactional
   public Generation update(Integer id, Generation generationDetails) {
     log.debug("Updating generation with id: {}", id);
 
@@ -84,7 +80,6 @@ public class GenerationService {
     return generationRepository.save(existingGeneration);
   }
 
-  @Transactional
   public void deleteById(Integer id) {
     log.debug("Deleting generation with id: {}", id);
 

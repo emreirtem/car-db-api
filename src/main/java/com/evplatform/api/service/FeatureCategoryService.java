@@ -10,13 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class FeatureCategoryService {
 
   private final FeatureCategoryRepository featureCategoryRepository;
@@ -42,7 +40,6 @@ public class FeatureCategoryService {
     return featureCategoryRepository.findByName(name);
   }
 
-  @Transactional
   public FeatureCategory save(FeatureCategory featureCategory) {
     log.debug("Saving feature category: {}", featureCategory.getName());
 
@@ -53,7 +50,6 @@ public class FeatureCategoryService {
     return featureCategoryRepository.save(featureCategory);
   }
 
-  @Transactional
   public FeatureCategory update(Integer id, FeatureCategory categoryDetails) {
     log.debug("Updating feature category with id: {}", id);
 
@@ -68,7 +64,6 @@ public class FeatureCategoryService {
     return featureCategoryRepository.save(existingCategory);
   }
 
-  @Transactional
   public void deleteById(Integer id) {
     log.debug("Deleting feature category with id: {}", id);
 

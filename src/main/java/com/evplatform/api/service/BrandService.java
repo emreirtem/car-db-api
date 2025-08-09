@@ -10,12 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class BrandService {
 
   private final BrandRepository brandRepository;
@@ -46,7 +44,6 @@ public class BrandService {
     return brandRepository.findByNameContainingIgnoreCase(name);
   }
 
-  @Transactional
   public Brand save(Brand brand) {
     log.debug("Saving brand: {}", brand.getName());
 
@@ -57,7 +54,6 @@ public class BrandService {
     return brandRepository.save(brand);
   }
 
-  @Transactional
   public Brand update(Integer id, Brand brandDetails) {
     log.debug("Updating brand with id: {}", id);
 
@@ -74,7 +70,6 @@ public class BrandService {
     return brandRepository.save(existingBrand);
   }
 
-  @Transactional
   public void deleteById(Integer id) {
     log.debug("Deleting brand with id: {}", id);
 

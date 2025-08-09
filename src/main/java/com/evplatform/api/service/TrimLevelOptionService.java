@@ -10,12 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class TrimLevelOptionService {
 
   private final TrimLevelOptionRepository trimLevelOptionRepository;
@@ -52,7 +50,6 @@ public class TrimLevelOptionService {
     return trimLevelOptionRepository.findOptionsByTrimLevelId(trimLevelId);
   }
 
-  @Transactional
   public TrimLevelOption save(TrimLevelOption trimLevelOption) {
     log.debug("Saving trim level option for trim level: {} and option: {}",
         trimLevelOption.getTrimLevel().getId(), trimLevelOption.getOption().getId());
@@ -77,7 +74,6 @@ public class TrimLevelOptionService {
     return trimLevelOptionRepository.save(trimLevelOption);
   }
 
-  @Transactional
   public TrimLevelOption update(Integer id, TrimLevelOption optionDetails) {
     log.debug("Updating trim level option with id: {}", id);
 
@@ -109,7 +105,6 @@ public class TrimLevelOptionService {
     return trimLevelOptionRepository.save(existingOption);
   }
 
-  @Transactional
   public void deleteById(Integer id) {
     log.debug("Deleting trim level option with id: {}", id);
 

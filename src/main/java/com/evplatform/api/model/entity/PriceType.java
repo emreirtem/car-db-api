@@ -43,6 +43,12 @@ public class PriceType {
     this.type = type;
   }
 
+  public static PriceType of(PriceTypeDto priceTypeDto) {
+    return PriceType.builder()
+        .type(priceTypeDto.getType())
+        .build();
+  }
+
   // Helper methods
   public void addPrice(Price price) {
     prices.add(price);
@@ -52,11 +58,5 @@ public class PriceType {
   public void removePrice(Price price) {
     prices.remove(price);
     price.setPriceType(null);
-  }
-
-  public static PriceType of(PriceTypeDto priceTypeDto) {
-    return PriceType.builder()
-        .type(priceTypeDto.getType())
-        .build();
   }
 }

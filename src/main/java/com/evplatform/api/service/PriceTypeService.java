@@ -9,12 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class PriceTypeService {
 
   private final PriceTypeRepository priceTypeRepository;
@@ -35,7 +33,6 @@ public class PriceTypeService {
         .orElseThrow(() -> new EntityNotFoundException("Price type not found with type: " + type));
   }
 
-  @Transactional
   public PriceType save(PriceType priceType) {
     log.debug("Saving price type: {}", priceType.getType());
 
@@ -46,7 +43,6 @@ public class PriceTypeService {
     return priceTypeRepository.save(priceType);
   }
 
-  @Transactional
   public void deleteById(String type) {
     log.debug("Deleting price type with type: {}", type);
 

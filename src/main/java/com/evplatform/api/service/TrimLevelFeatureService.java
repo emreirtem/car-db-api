@@ -12,12 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class TrimLevelFeatureService {
 
   private final TrimLevelFeatureRepository trimLevelFeatureRepository;
@@ -60,7 +58,6 @@ public class TrimLevelFeatureService {
     return trimLevelFeatureRepository.findByTrimLevelIdAndFeatureCategoryId(trimLevelId, categoryId);
   }
 
-  @Transactional
   public TrimLevelFeature save(TrimLevelFeature trimLevelFeature) {
     log.debug("Saving trim level feature for trim level: {} and feature: {}",
         trimLevelFeature.getTrimLevel().getId(), trimLevelFeature.getFeature().getId());
@@ -85,7 +82,6 @@ public class TrimLevelFeatureService {
     return trimLevelFeatureRepository.save(trimLevelFeature);
   }
 
-  @Transactional
   public TrimLevelFeature update(Integer id, TrimLevelFeature featureDetails) {
     log.debug("Updating trim level feature with id: {}", id);
 
@@ -102,7 +98,6 @@ public class TrimLevelFeatureService {
     return trimLevelFeatureRepository.save(existingFeature);
   }
 
-  @Transactional
   public void deleteById(Integer id) {
     log.debug("Deleting trim level feature with id: {}", id);
 

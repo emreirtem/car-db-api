@@ -10,12 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class FeatureGroupService {
 
   private final FeatureGroupRepository featureGroupRepository;
@@ -46,7 +44,6 @@ public class FeatureGroupService {
     return featureGroupRepository.findByMulti(multi);
   }
 
-  @Transactional
   public FeatureGroup save(FeatureGroup featureGroup) {
     log.debug("Saving feature group: {}", featureGroup.getName());
 
@@ -57,7 +54,6 @@ public class FeatureGroupService {
     return featureGroupRepository.save(featureGroup);
   }
 
-  @Transactional
   public FeatureGroup update(Integer id, FeatureGroup groupDetails) {
     log.debug("Updating feature group with id: {}", id);
 
@@ -74,7 +70,6 @@ public class FeatureGroupService {
     return featureGroupRepository.save(existingGroup);
   }
 
-  @Transactional
   public void deleteById(Integer id) {
     log.debug("Deleting feature group with id: {}", id);
 

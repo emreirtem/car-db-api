@@ -1,5 +1,6 @@
 package com.evplatform.api.model.entity;
 
+import com.evplatform.api.model.dto.FeatureCategoryDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,5 +54,12 @@ public class FeatureCategory {
   public void removeFeature(Feature feature) {
     features.remove(feature);
     feature.setFeatureCategory(null);
+  }
+
+  public static FeatureCategory of(FeatureCategoryDto featureCategoryDto) {
+    return FeatureCategory.builder()
+        .id(featureCategoryDto.getId())
+        .name(featureCategoryDto.getName())
+        .build();
   }
 }

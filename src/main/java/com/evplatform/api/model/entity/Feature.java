@@ -1,5 +1,6 @@
 package com.evplatform.api.model.entity;
 
+import com.evplatform.api.model.dto.FeatureDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -79,4 +80,28 @@ public class Feature {
     trimLevelFeatures.remove(trimLevelFeature);
     trimLevelFeature.setFeature(null);
   }
+
+  public static Feature of(FeatureDto featureDto) {
+    var feature = Feature.builder()
+        .id(featureDto.getId())
+        .name(featureDto.getName())
+        .orderInGroup(featureDto.getOrderInGroup())
+        .valueUnit(featureDto.getValueUnit())
+        .build();
+
+    if (featureDto.getFeatureGroup() != null && featureDto.getFeatureGroup().getId() != null) {
+      feature.setFeatureGroup(FeatureGroup.of(featureDto.getFeatureGroup()));
+    }
+
+    if (featureDto.getFeatureType() != null && featureDto.getFeatureType().getName() != null) {
+      feature.setFeatureType(FeatureType.of(featureDto.getFeatureType()));
+    }
+
+    if (featureDto.getFeatureCategory() != null && featureDto.getFeatureCategory().getId() != null) {
+      feature.setFeatureCategory(FeatureCategory.of(featureDto.getFeatureCategory()));
+    }
+
+    return feature;
+  }
+
 }

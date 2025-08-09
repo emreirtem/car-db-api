@@ -1,5 +1,6 @@
 package com.evplatform.api.model.entity;
 
+import com.evplatform.api.model.dto.FeatureGroupDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -55,5 +56,13 @@ public class FeatureGroup {
   public void removeFeature(Feature feature) {
     features.remove(feature);
     feature.setFeatureGroup(null);
+  }
+
+  public static FeatureGroup of(FeatureGroupDto featureGroupDto) {
+    return FeatureGroup.builder()
+        .id(featureGroupDto.getId())
+        .name(featureGroupDto.getName())
+        .multi(featureGroupDto.getMulti())
+        .build();
   }
 }
